@@ -30,7 +30,7 @@ output_dir.mkdir(exist_ok=True)
 # app.mount("/outputs", StaticFiles(directory=str(output_dir)), name="outputs")
 
 # 定义上传目录 updated
-updated_dir = project_root / "updated"
+updated_dir = project_root / "upload"
 updated_dir.mkdir(exist_ok=True)
 
 # 配置 CORS
