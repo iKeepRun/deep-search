@@ -25,7 +25,7 @@ main_agent=create_deep_agent(
     model=llm ,
     system_prompt=main_agent_info['system_prompt'],
     tools=[generate_markdown,convert_md_to_pdf,read_file_content],
-    checkpointer=InMemorySaver(),
+    # checkpointer=InMemorySaver(),
     subagents=[knowledge_base_agent,network_search_agent,db_query_agent],
 )
 
@@ -74,7 +74,7 @@ async def run_main_agent(input_text:str, session_id:str):
     # 获取项目根目录
     project_root_dir = Path(__file__).parents[1].resolve()
     # 会话存储目录
-    session_dir=project_root_dir / "output"/ f"session_ {session_id}"
+    session_dir=project_root_dir / "output"/ f"session_{session_id}"
     # 没有就创建
     session_dir.mkdir(parents=True, exist_ok=True)
     # 将路径转换为字符串（替换掉 \ ，防止大模型出现幻觉）
@@ -90,11 +90,11 @@ async def run_main_agent(input_text:str, session_id:str):
     if upload_dir.exists():
         print("有上传文件")
         # 获取上传文件列表
-        upload_file_list = [f for f in upload_dir.iterdir() if f.is_file()]
+        upload_file_list = [f.name for f in upload_dir.iterdir() if f.is_file()]
 
         # 遍历上传文件列表
         if upload_file_list:
-            for file in upload_file_list:
+            for filename in upload_file_list:
                 # 获取文件名
                 # file_name = file.name
                 # # 获取文件内容
@@ -102,9 +102,9 @@ async def run_main_agent(input_text:str, session_id:str):
                 # # 将文件名和内容拼接到输入文本中
                 # input_text += f"上传文件名：{file_name}\n上传文件内容：{file_content}\n"
                 # 将上传文件复制到会话目录下
-                shutil.copy2(upload_dir /file, session_dir / file)
+                shutil.copy2(upload_dir /filename, session_dir / filename)
                 # [构造] 生成文件列表提示词
-                uploaded_info = (f"\n    [已上传文件] 已加载到工作目录:\n" +
+            uploaded_info = (f"\n    [已上传文件] 已加载到工作目录:\n" +
                                  "\n".join([f"    - {f}" for f in upload_file_list]) +
                                  "\n    请优先使用工具读取并参考这些文件。")
 

@@ -1,6 +1,6 @@
 import os
+from typing import Literal
 
-from dotenv.variables import Literal
 from langchain_core.tools import tool
 from tavily import TavilyClient
 
@@ -13,7 +13,7 @@ client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 
 @tool
 def internal_search(query:str,
-                    topic:Literal["news","finance","general"]="general",
+                    topic:Literal["news","finace","general"]="general",
                     max_results:int=5,
                     include_raw_content:bool= False):
     """

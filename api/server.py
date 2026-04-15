@@ -1,8 +1,9 @@
 import sys
 import uuid
 import asyncio
-import uvicorn
 from pathlib import Path
+
+import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Form
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,6 +47,20 @@ class TaskRequest(BaseModel):
     query: str
     thread_id: str = None
 
+# @app.on_event("startup")
+# async def start_up_event():
+#     """
+#     初始化任务监控器。
+#
+#     目标：
+#     1. 启动任务监控器。
+#     2. 确保任务管理器已启动。
+#     3. 确保任务管理器已初始化。
+#     """
+#     # 1. [启动] 启动任务监控器
+#     loop=asyncio.get_running_loop()
+#     # manager.set_loop(loop)
+#     print(f"事件循环启动成功：{id( loop)}")
 
 @app.post("/api/task")
 async def run_task(request: TaskRequest):
@@ -242,3 +257,9 @@ async def websocket_endpoint(websocket: WebSocket, thread_id: str):
         # 6. [异常] 发生错误时断开
         print(f"[WebSocket] 连接异常: {e}")
         manager.disconnect(websocket, thread_id)
+
+
+
+
+if __name__ == "__main__":
+    uvicorn.run("api.server:app", host="0.0.0.0", port=8000, reload=True)
